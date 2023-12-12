@@ -1,14 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/confluentinc/confluent-kafka-go/kafka"
 )
 
 func main() {
-	fmt.Println("Hello, World GO!")
+	producer := NewKafkaProducer()
+	Publish("Mensagem GO", "teste", producer, nil)
+	producer.Flush(1000)
 }
 
 func NewKafkaProducer() *kafka.Producer {
@@ -20,4 +21,17 @@ func NewKafkaProducer() *kafka.Producer {
     log.Println(err.Error())
   }
 	return p
+}
+
+func Publish(msg string, topic string, producer *kafka.Producer, key []byte) error {
+	message := &kafka.Message{
+		Value: []byte(msg),
+		TopicPartition: kafka.TopicPartition{Topic: &topic, Partition: kafka.PartitionAny},
+		Key: key,
+	}
+	err := producer.Produce(message, nil)
+	if err!= nil {
+    return err
+  }
+	return nil
 }
