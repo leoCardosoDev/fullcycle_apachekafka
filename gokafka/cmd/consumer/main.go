@@ -22,7 +22,7 @@ func main() {
 	for {
 		msg, err := c.ReadMessage(-1)
     if err == nil {
-      fmt.Printf(string(msg.Value), msg.TopicPartition)
+      fmt.Printf(string(msg.Value), "%v\n", msg.TopicPartition, "%v\n")
     }
 	}
 }
